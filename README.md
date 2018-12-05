@@ -1,2 +1,2 @@
-# bbg-dayz
+# Chivalry Is Dead!
 Playing with code for DayZ
