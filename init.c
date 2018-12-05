@@ -1,3 +1,4 @@
+/*
 	Black Beret Gaming Script
 
 	* Hive
