@@ -1,11 +1,12 @@
 /*
-	Black Beret Gaming Script
+
+	Chivalry os
 
 	* Hive
 	* Weather
 	* Player Health 
-	* Player Connect
-	* Player Spawn
+	* Player Connect (Issue: Boots)
+	* Player Spawn (Issue: Testing Phase)
 	* Custom Mission
 	
 	Docementation & Useful Values and Strings
@@ -76,33 +77,18 @@
 
 			//BUISOptic
 			//M68Optic
-			//
+			//M4_T3NRDSOptic
 			//ReflexOptic
 			//TLRLight
-			//
-
+			//PistolSuppressor
+			//ACOGOptic
+			
 			//CanisterGasoline
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("BUISOptic");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("M68Optic");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("ReflexOptic");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("ACOGOptic");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("TLRLight");
-
-						OBJECT_SELECTED = player.GetInventory().CreateInInventory("PistolSuppressor");
-
-
-		OBJECT_SELECTED = player.GetInventory().CreateInInventory("SparkPlug");
-		OBJECT_POSITION = ItemBase.Cast(OBJECT_SELECTED);
+			//SparkPlug
 */
 
 int SERVER_SPAWNID = 0;
+int SCIRPT_RANDOM = 0;
 
 //char WEAPON_SCOPE[5][16] = { "M4_T3NRDSOptic", "ACOGOptic", "BUISOptic", "M68Optic", "ReflexOptic" };
 
@@ -159,73 +145,74 @@ class CustomMission: MissionServer
 		ItemBase ITEM_LOCATION;
 		
 		player.RemoveAllItems();
-		
-		ITEM_SELECTED = player.GetInventory().CreateInInventory("CombatBoots");
-		ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
-//		ITEM_SELECTED = player.GetInventory().CreateInInventory(shoesArray.GetRandomElement());
+
+		ITEM_SELECTED = player.GetInventory().CreateInInventory(shoesArray.GetRandomElement());
 
 		if(SERVER_SPAWNID == 0)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AssaultBag_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("CargoPants_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M65Jacket_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4A1");
-	
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_OEBttstck");
-		
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_PlasticHndgrd");
-
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_OEBttstck");
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_PlasticHndgrd");
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
 		else if(SERVER_SPAWNID == 1)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TortillaBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaPants_Summer");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaEJacket_Autumn");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AKM");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AK_WoodBttstck");
-		
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AK_WoodHndgrd");
-		
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AK_Suppressor");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
 		else if(SERVER_SPAWNID == 2)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TortillaBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaPants_Summer");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaEJacket_Summer");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SVD");
-			
-//			int = ranomint = random(5);
-//			int ranomint = Math.RandomInt(0,4);
-						
-			int randomint = Math.RandomInt(0,1);
-			
-			if(randomint == 1)
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			SCIRPT_RANDOM = Math.RandomInt(0,1);
+			if(SCIRPT_RANDOM == 1)
 			{
 				ITEM_SELECTED = player.GetInventory().CreateInInventory("PSO1Optic");
 			}
@@ -233,103 +220,118 @@ class CustomMission: MissionServer
 			{
 				ITEM_SELECTED = player.GetInventory().CreateInInventory("KashtanOptic");
 			}
-/*
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("KashtanOptic");
-
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("PSO1Optic");
-
-*/
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
 		else if(SERVER_SPAWNID == 3)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SmershBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTSKOPants");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTsKOJacket_Camo");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("UMP45");
-				
-//			int = ranomint = random(5);
-//			int ranomint = Math.RandomInt(0,4);
-
-//			ITEM_SELECTED = player.GetInventory().CreateInInventory(WEAPON_SCOPE[randomint]);
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
 		else if(SERVER_SPAWNID == 4)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SmershBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTSKOPants");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTsKOJacket_Camo");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5K");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5_PlasticHndgrd");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5k_StockBttstck");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5_RailHndgrd");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5_Compensator");
-
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("ACOGOptic");
-	
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("BUISOptic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M68Optic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("ReflexOptic");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			SCIRPT_RANDOM = Math.RandomInt(0,4);
+			if(SCIRPT_RANDOM == 0)
+			{
+				player.GetInventory().CreateInInventory("BUISOptic");
+			}
+			else if(SCIRPT_RANDOM == 1)
+			{
+				player.GetInventory().CreateInInventory("M68Optic");
+			}
+			else if(SCIRPT_RANDOM == 2)
+			{
+				player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
+			}
+			else if(SCIRPT_RANDOM == 3)
+			{
+				player.GetInventory().CreateInInventory("ACOGOptic");
+			}
+			else
+			{
+				player.GetInventory().CreateInInventory("ReflexOptic");
+			}
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("PistolSuppressor");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_30Rnd");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_15Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_15Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
 		else
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AssaultBag_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("CargoPants_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M65Jacket_Khaki");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("CZ61");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("ACOGOptic");
-	
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("BUISOptic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M68Optic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-				
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("ReflexOptic");
-				
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			SCIRPT_RANDOM = Math.RandomInt(0,4);
+			if(SCIRPT_RANDOM == 0)
+			{
+				player.GetInventory().CreateInInventory("BUISOptic");
+			}
+			else if(SCIRPT_RANDOM == 1)
+			{
+				player.GetInventory().CreateInInventory("M68Optic");
+			}
+			else if(SCIRPT_RANDOM == 2)
+			{
+				player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
+			}
+			else if(SCIRPT_RANDOM == 3)
+			{
+				player.GetInventory().CreateInInventory("ACOGOptic");
+			}
+			else
+			{
+				player.GetInventory().CreateInInventory("ReflexOptic");
+			}
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
-
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 
 			SERVER_SPAWNID = -1;
 		}
@@ -340,12 +342,4 @@ class CustomMission: MissionServer
 Mission CreateCustomMission(string path)
 {
 	return new CustomMission();
-}
-
-void CreateServerTimer()
-{
-//	Timer(1000);
-//	int randomint = Math.RandomInt(0,4);
-//	SetCameraType(1, randomint);	
-//	SetCameraEx(1, 4293);
 }
