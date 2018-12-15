@@ -1,154 +1,79 @@
-/*
-
-	Chivalry os
-
-	* Hive
-	* Weather
-	* Player Health 
-	* Player Connect (Issue: Boots)
-	* Player Spawn (Issue: Testing Phase)
-	* Custom Mission
-	
-	Docementation & Useful Values and Strings
-	
-			//AKM
-			//AK_WoodBttstck
-			//AK_WoodHndgrd
-			//Mag_AKM_30Rnd
-
-			//SVD
-			//Mag_SVD_10Rnd
-
-			//UMP45
-			//Mag_UMP_25Rnd
-
-			//MP5K
-			//MP5_PlasticHndgrd
-			//MP5k_StockBttstck
-			//Mag_MP5_30Rnd
-
-			//CZ61
-			//AK_Suppressor
-			//Mag_CZ61_20Rnd
-
-			//MakarovIJ70
-			//Mag_IJ70_8Rnd
-
-			//FNX45
-			//Mag_FNX45_15Rnd
-
-			//CZ75
-			//Mag_CZ75_15Rnd
-
-			//TacticalShirt_Black
-			//M65Jacket_Black
-
-			//HuntingBag
-			//HuntingJacket_Autumn
-			//HunterPants_Autumn
-
-			//MountainBag_Red
-			//CanvasPants_Red
-			//TrackSuitJacket_Red
-			//FirefightersPants_Black
-
-			//PoliceJacket (PoliceJacketOrel)
-			//PolicePants (PolicePantsOrel)
-
-			//PrisonUniformJacket
-			//PrisonUniformPants
-
-			//TaloonBag_Blue
-			//FirstAidKit
-			//CanvasPants_Blue
-			//MedicalScrubsPants_Blue
-			//ParamedicJacket_Blue
-			//MedicalScrubsShirt_Blue
-
-			//TortillaBag
-			//SmershBag
-			//TTSKOPants
-			//GorkaPants_Summer
-			//GorkaEJacket_Summer (PautRev, Autumn, Flat)
-			//USMCJacket_Desert (Woodland)
-			//USMCPants_Woodland
-			//BDUPants
-			//M65Jacket_Khaki (Tan, Olive, Camo)
-
-			//BUISOptic
-			//M68Optic
-			//M4_T3NRDSOptic
-			//ReflexOptic
-			//TLRLight
-			//PistolSuppressor
-			//ACOGOptic
-			
-			//CanisterGasoline
-			//SparkPlug
-*/
-
-int SERVER_SPAWNID = 0;
-int SCIRPT_RANDOM = 0;
-
-//char WEAPON_SCOPE[5][16] = { "M4_T3NRDSOptic", "ACOGOptic", "BUISOptic", "M68Optic", "ReflexOptic" };
+#include "$CurrentDir:\\mpmissions\\dayzOffline.chernarusplus\\Script_Resources.c"
+#include "$CurrentDir:\\mpmissions\\dayzOffline.chernarusplus\\Script_Callbacks.c"
+#include "$CurrentDir:\\mpmissions\\dayzOffline.chernarusplus\\Script_Mission.c"
 
 void main()
 {
-
-	Hive SERVER_HIVE = CreateHive();
-	if (SERVER_HIVE)
-	{
-	
-		SERVER_HIVE.InitOffline();
-	}
-	
 	Weather SERVER_WEATHER = g_Game.GetWeather();
 
-	SERVER_WEATHER.GetOvercast().SetLimits( 0.0 , 1.0 );
-	SERVER_WEATHER.GetRain().SetLimits( 0.0 , 1.0 );
-	SERVER_WEATHER.GetFog().SetLimits( 0.0 , 0.25 );
+    SERVER_WEATHER.MissionWeather(false);    // false = use weather controller from Weather.c
 
-	SERVER_WEATHER.GetOvercast().SetForecastChangeLimits( 0.5, 0.8 );
-	SERVER_WEATHER.GetRain().SetForecastChangeLimits( 0.1, 0.3 );
-	SERVER_WEATHER.GetFog().SetForecastChangeLimits( 0.05, 0.10 );
+    SERVER_WEATHER.GetOvercast().Set( Math.RandomFloatInclusive(0.4, 0.6), 1, 0);
+    SERVER_WEATHER.GetRain().Set(0, 0, 1);
+    SERVER_WEATHER.GetFog().Set( Math.RandomFloatInclusive(0.05, 0.1), 1, 0);
 
-	SERVER_WEATHER.GetOvercast().SetForecastTimeLimits( 3600 , 3600 );
-	SERVER_WEATHER.GetRain().SetForecastTimeLimits( 300 , 300 );
-	SERVER_WEATHER.GetFog().SetForecastTimeLimits( 3600 , 3600 );
+	Hive SERVER_HIVE = CreateHive();
+	if(SERVER_HIVE)SERVER_HIVE.InitOffline();
 
-	SERVER_WEATHER.GetOvercast().Set( Math.RandomFloatInclusive(0.0, 0.3), 0, 0);
-	SERVER_WEATHER.GetRain().Set( Math.RandomFloatInclusive(0.0, 0.2), 0, 0);
-	SERVER_WEATHER.GetFog().Set( Math.RandomFloatInclusive(0.0, 0.1), 0, 0);
-	
-	SERVER_WEATHER.SetWindMaximumSpeed(30);
-	SERVER_WEATHER.SetWindFunctionParams(0.1, 1.0, 50);
-	
-	CreateServerTimer();
+	int year;
+	int month;
+	int day;
+	int hour;
+	int minute;
+
+	GetGame().GetWorld().GetDate(year, month, day, hour, minute);
+
+    if (((month <= 9) && (day < 20)) || ((month >= 10) && (day > 20)))
+    {
+        month = 9;
+        day = 20;
+		
+		GetGame().GetWorld().SetDate(year, month, day, hour, minute);
+	}
+	ScriptCallback.OnGameModeInit();
 }
 
 class CustomMission: MissionServer
 {	
+	void SetRandomHealth(EntityAI itemEnt)
+	{
+		if ( itemEnt )
+		{
+			int rndHlt = Math.RandomInt(55,100);
+			itemEnt.SetHealth("","",rndHlt);
+		}
+	}
+
 	override PlayerBase CreateCharacter(PlayerIdentity identity, vector pos, ParamsReadContext ctx, string characterName)
 	{
-		Entity PLAYER_ID;
-		PLAYER_ID = GetGame().CreatePlayer(identity, characterName, pos, 0, "NONE");//Creates random player
-		Class.CastTo(m_player, PLAYER_ID);
+		Entity playerEnt;
+		playerEnt = GetGame().CreatePlayer(identity, characterName, pos, 0, "NONE");//Creates random player
+		Class.CastTo(m_player, playerEnt);
 		
 		GetGame().SelectPlayer(identity, m_player);
 		
+		m_player.SetHealth(m_player.GetMaxHealth("", ""));
+	    m_player.SetHealth("", "Blood", m_player.GetMaxHealth("", "Blood"));
+		m_player.GetStatStamina().Set(1000);
+		m_player.GetStatEnergy().Set(1000);
+		m_player.GetStatWater().Set(1000);
+
 		return m_player;
 	}
-	
 	override void StartingEquipSetup(PlayerBase player, bool clothesChosen)
 	{
+		EntityAI ITEM_CONTAINER;
 		EntityAI ITEM_SELECTED;
 		ItemBase ITEM_LOCATION;
+
+		player.RemoveAllItems(); 
+
+		ScriptData.SCRIPT_RANDOM = Math.RandomInt(0, ScriptData.SERVER_MAX_SPAWNS - 1);
+		player.SetPosition(ScriptData.SERVER_SPAWN[ScriptData.SCRIPT_RANDOM]);
 		
-		player.RemoveAllItems();
-
-		ITEM_SELECTED = player.GetInventory().CreateInInventory(shoesArray.GetRandomElement());
-
-		if(SERVER_SPAWNID == 0)
+		ScriptData.SCRIPT_RANDOM = Math.RandomInt(0, ScriptData.SERVER_MAX_ROLES - 1);
+		
+		if(ScriptData.SCRIPT_RANDOM == 0)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AssaultBag_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
@@ -156,25 +81,21 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M65Jacket_Black");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Black");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4A1");
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_OEBttstck");
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_PlasticHndgrd");
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_STANAG_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 		}
-		else if(SERVER_SPAWNID == 1)
+		else if(ScriptData.SCRIPT_RANDOM == 1)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TortillaBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
@@ -182,7 +103,9 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaEJacket_Autumn");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-		
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Brown");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AKM");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("AK_WoodBttstck");
@@ -193,14 +116,9 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_LOCATION.SetQuantity(3);
 		}
-		else if(SERVER_SPAWNID == 2)
+		else if(ScriptData.SCRIPT_RANDOM == 2)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TortillaBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
@@ -208,26 +126,20 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("GorkaEJacket_Summer");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Black");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SVD");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			SCIRPT_RANDOM = Math.RandomInt(0,1);
-			if(SCIRPT_RANDOM == 1)
-			{
-				ITEM_SELECTED = player.GetInventory().CreateInInventory("PSO1Optic");
-			}
-			else
-			{
-				ITEM_SELECTED = player.GetInventory().CreateInInventory("KashtanOptic");
-			}
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_LOCATION.SetQuantity(2);
+
+			ScriptData.SCRIPT_RANDOM = Math.RandomInt(0,2);
+			if(ScriptData.SCRIPT_RANDOM == 1)ITEM_SELECTED = player.GetInventory().CreateInInventory("PSO1Optic");
+			else if(ScriptData.SCRIPT_RANDOM == 2)ITEM_SELECTED = player.GetInventory().CreateInInventory("KashtanOptic");
 		}
-		else if(SERVER_SPAWNID == 3)
+		else if(ScriptData.SCRIPT_RANDOM == 3)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SmershBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
@@ -235,17 +147,23 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTsKOJacket_Camo");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Black");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+									
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("UMP45");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_LOCATION.SetQuantity(2);
+
+			ScriptData.SCRIPT_RANDOM = Math.RandomInt(0,5);
+			if(ScriptData.SCRIPT_RANDOM == 0)player.GetInventory().CreateInInventory("BUISOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 1)player.GetInventory().CreateInInventory("M68Optic");
+			else if(ScriptData.SCRIPT_RANDOM == 2)player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 3)player.GetInventory().CreateInInventory("ACOGOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 4)player.GetInventory().CreateInInventory("ReflexOptic");
 		}
-		else if(SERVER_SPAWNID == 4)
+		else if(ScriptData.SCRIPT_RANDOM == 4)
 		{
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("SmershBag");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
@@ -253,7 +171,9 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("TTsKOJacket_Camo");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-				
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Black");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+							
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5K");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5_PlasticHndgrd");
@@ -264,35 +184,18 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("MP5_Compensator");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			SCIRPT_RANDOM = Math.RandomInt(0,4);
-			if(SCIRPT_RANDOM == 0)
-			{
-				player.GetInventory().CreateInInventory("BUISOptic");
-			}
-			else if(SCIRPT_RANDOM == 1)
-			{
-				player.GetInventory().CreateInInventory("M68Optic");
-			}
-			else if(SCIRPT_RANDOM == 2)
-			{
-				player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-			}
-			else if(SCIRPT_RANDOM == 3)
-			{
-				player.GetInventory().CreateInInventory("ACOGOptic");
-			}
-			else
-			{
-				player.GetInventory().CreateInInventory("ReflexOptic");
-			}
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("PistolSuppressor");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_30Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_15Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_MP5_15Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_LOCATION.SetQuantity(2);
+
+			ScriptData.SCRIPT_RANDOM = Math.RandomInt(0,5);
+			if(ScriptData.SCRIPT_RANDOM == 0)player.GetInventory().CreateInInventory("BUISOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 1)player.GetInventory().CreateInInventory("M68Optic");
+			else if(ScriptData.SCRIPT_RANDOM == 2)player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 3)player.GetInventory().CreateInInventory("ACOGOptic");
+			else if(ScriptData.SCRIPT_RANDOM == 4)player.GetInventory().CreateInInventory("ReflexOptic");
 		}
 		else
 		{
@@ -302,43 +205,88 @@ class CustomMission: MissionServer
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("M65Jacket_Khaki");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("MilitaryBoots_Black");
+			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
 				
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("CZ61");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			SCIRPT_RANDOM = Math.RandomInt(0,4);
-			if(SCIRPT_RANDOM == 0)
-			{
-				player.GetInventory().CreateInInventory("BUISOptic");
-			}
-			else if(SCIRPT_RANDOM == 1)
-			{
-				player.GetInventory().CreateInInventory("M68Optic");
-			}
-			else if(SCIRPT_RANDOM == 2)
-			{
-				player.GetInventory().CreateInInventory("M4_T3NRDSOptic");
-			}
-			else if(SCIRPT_RANDOM == 3)
-			{
-				player.GetInventory().CreateInInventory("ACOGOptic");
-			}
-			else
-			{
-				player.GetInventory().CreateInInventory("ReflexOptic");
-			}
 			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
 			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-			ITEM_SELECTED = player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
-			ITEM_LOCATION = ItemBase.Cast(ITEM_SELECTED);
-
-			SERVER_SPAWNID = -1;
+			ITEM_LOCATION.SetQuantity(2);
 		}
-		SERVER_SPAWNID++;
+		ScriptCallback.OnPlayerSpawn(player);
+/*		ITEM_CONTAINER = player.FindAttachmentBySlotName("Body");
+		
+		if(ITEM_CONTAINER)
+		{
+			ITEM_SELECTED = ITEM_CONTAINER.GetInventory().CreateInInventory("Rag");
+			if(Class.CastTo(ITEM_SELECTED))
+				ITEM_LOCATION.SetQuantity(4);
+
+			SetRandomHealth(ITEM_SELECTED);
+			
+			ITEM_SELECTED = itemTop.GetInventory().CreateInInventory("RoadFlare");
+			SetRandomHealth(ITEM_SELECTED);
+		
+			ITEM_SELECTED = itemTop.GetInventory().CreateInInventory("StoneKnife");
+			SetRandomHealth(ITEM_SELECTED);
+		}
+
+		rand = Math.RandomFloatInclusive(0.0, 1.0);
+		if(rand < 0.25)
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("SodaCan_Cola");
+		else if(rand > 0.75)
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("SodaCan_Spite");
+		else
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("SodaCan_Pipsi");
+		
+		SetRandomHealth(ITEM_SELECTED);
+
+		rand = Math.RandomFloatInclusive(0.0, 1.0);
+		if (rand < 0.35)
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Apple");
+		else if( rand > 0.65)
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Pear");
+		else
+			ITEM_SELECTED = player.GetInventory().CreateInInventory("Plum");
+		
+		SetRandomHealth(ITEM_SELECTED);
+*/
+
+/*
+
+		EntityAI ITEM_SELECTED;
+		ItemBase ITEM_LOCATION;
+
+		ScriptData.SCRIPT_RANDOM = Math.RandomInt(0, ScriptData.SERVER_MAX_SPAWNS - 1);
+		player.SetPosition(ScriptData.SERVER_SPAWN[ScriptData.SCRIPT_RANDOM]);
+
+		if(ScriptData.SERVER_SPAWNID == 0)
+		{
+
+		}
+		else if(ScriptData.SERVER_SPAWNID == 1)
+		{ 
+		}
+		else if(ScriptData.SERVER_SPAWNID == 2)
+		{
+		}
+		else if(ScriptData.SERVER_SPAWNID == 3)
+		{
+		}
+		else if(ScriptData.SERVER_SPAWNID == 4)
+		{
+		}
+		else
+		{
+
+			ScriptData.SERVER_SPAWNID = -1;
+		}
+		ScriptData.SERVER_SPAWNID++;
+*/
 	}
 };
-  
+
 Mission CreateCustomMission(string path)
 {
 	return new CustomMission();
